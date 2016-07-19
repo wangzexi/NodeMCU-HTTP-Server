@@ -126,7 +126,11 @@ request -> parseHeader -> **user middleware** -> staticFile
 
 The order of middleware loading is important: middleware functions that are loaded first are also executed first.
 
-IF one of the user middleware functions has **nil/false** return value, the request process will be stopped.
+If one of the user middleware functions has **nil/false** return value, the request process will be stopped.
+
+### httpServer:use(url, callback)
+
+The first parameter url is a lua pattern, i.e. **'\\foo.*'** can match '\foo.html', '\foo\bar.jpg'...
 
 
 
