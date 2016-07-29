@@ -95,14 +95,14 @@ function Response:send(body)
 end
 
 function Response:sendFile(filename)
-	if not file.exists(filename) then
+	if file.exists(filename .. '.gz') then
+		filename = filename .. '.gz'
+	elseif not file.exists(filename) then
 		self:status(404)
-		if file.exists('404.html.gz') then
-			self:sendFile('404.html.gz')
-		elseif file.exists('404.html') then
-			self:sendFile('404.html')
-		else
+		if filename == '404.html' then
 			self:send(getStatusText(404))
+		else
+			self:sendFile('404.html')
 		end
 		return
 	end
@@ -212,10 +212,6 @@ function staticFile(req, res)
 		filename = 'index.html'
 	else
 		filename = string.gsub(string.sub(req.path, 2), '/', '_')
-	end
-
-	if file.exists(filename .. '.gz') then
-		filename = filename .. '.gz'
 	end
 
 	res:sendFile(filename)
