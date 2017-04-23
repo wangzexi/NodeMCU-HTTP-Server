@@ -147,35 +147,35 @@ end
 --------------------
 -- httpServer
 --------------------
-httpServer = {
+app = {
 	_srv = nil,
-	_middleware = {}
+	_mids = {}
 }
 
-function httpServer:use(url, callback)
-	self._middleware[#self._middleware + 1] = {
+function app:use(url, cb)
+	self._mids[#self._mids + 1] = {
 		url = url,
-		callback = callback
+		cb = cb
 	}
 end
 
-function httpServer:close()
+function app:close()
 	self._srv:close()
 	self._srv = nil
 end
 
-function httpServer:listen(port)
+function app:listen(port)
 	self._srv = net.createServer(net.TCP)
 	self._srv:listen(port, function(conn)
 		conn:on('receive', function(skt, msg)	
-			local req = {source = msg, ip = skt:getpeer()}
+			local req = { source = msg, ip = skt:getpeer() }
 			local res = Response:new(skt)
 
 			parseHeader(req, res)
 			local blocked = nil
-			for i = 1, #self._middleware do
-				if string.find(req.path, '^' .. self._middleware[i].url .. '$') then
-					if not self._middleware[i].callback(req, res) then
+			for i = 1, #self._mids do
+				if string.find(req.path, '^' .. self._mids[i].url .. '$') then
+					if not self._mids[i].cb(req, res) then
 						blocked = true
 						break
 					end
