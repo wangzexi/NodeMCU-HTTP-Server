@@ -74,8 +74,8 @@ function Res:send(body)
 		if buf == '' then 
 			self:close()
 		else
-			self._skt:send(string.sub(buf, 1, 256))
-			buf = string.sub(buf, 257)
+			self._skt:send(string.sub(buf, 1, 512))
+			buf = string.sub(buf, 513)
 		end
 	end
 	self._skt:on('sent', doSend)
@@ -115,8 +115,8 @@ function Res:sendFile(filename)
 			self:close()
 			print('* Finished ', filename)
 		else
-			local buf = file.read(256)
-			pos = pos + 256
+			local buf = file.read(512)
+			pos = pos + 512
 			self._skt:send(buf)
 		end
 		file.close()
