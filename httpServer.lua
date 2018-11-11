@@ -137,12 +137,12 @@ end
 -- Middleware
 --------------------
 function parseHeader(req, res)
-	local _, _, method, path, vars = string.find(req.source, '([A-Z]+) (.+)?(.+) HTTP')
+	local _, _, method, path, vars = string.find(req.source, '([A-Z]+) (.+)?(.*) HTTP')
 	if method == nil then
 		_, _, method, path = string.find(req.source, '([A-Z]+) (.+) HTTP')
 	end
 	local _GET = {}
-	if vars ~= nil then
+	if (vars ~= nil and vars ~= '') then
 		vars = urlDecode(vars)
 		for k, v in string.gmatch(vars, '([^&]+)=([^&]*)&*') do
 			_GET[k] = v
